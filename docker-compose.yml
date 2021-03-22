@@ -1,0 +1,31 @@
+# docker-compose.yml
+version: '3.3'
+
+services:
+  api:
+    image: varalex/varalex-api
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:5000"
+    ports:
+      - 5000:5000
+    networks:
+      default:
+        aliases:
+          - api1
+    depends_on:
+      - db
+  web:
+    image: varalex/varalex-web
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    networks:
+      default:
+        aliases:
+          - web1
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
